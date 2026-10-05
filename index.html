@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кулинарная книга</title>
+<meta name="description" content="Домашние рецепты, проверенные на себе.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍲</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;700&family=Inter:wght@400;500;600&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root {
+  --bg: #fbf7f1; --surface: #ffffff; --side: #f4ede4;
+  --text: #2b2420; --muted: #7a6d64;
+  --accent: #c2410c; --accent-soft: #fde7d9;
+  --line: #e7ddd1; --radius: 14px;
+  --shadow: 0 1px 2px rgba(60,40,20,.06), 0 6px 20px rgba(60,40,20,.06);
+  --side-w: 290px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1714; --surface: #25201c; --side: #211c18;
+    --text: #f1e9e2; --muted: #a99c92;
+    --accent: #fb923c; --accent-soft: #3a2a1f;
+    --line: #3a322c; --shadow: 0 1px 2px rgba(0,0,0,.3);
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--accent); text-decoration: none; }
+h1, h2, h3 { font-family: Lora, Georgia, serif; line-height: 1.2; }
+
+/* ---------- Боковая панель ---------- */
+.sidebar {
+  position: fixed; inset: 0 auto 0 0; width: var(--side-w);
+  background: var(--side); border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; z-index: 20;
+}
+.side-top { padding: 20px 18px 12px; }
+.logo { display: block; font-family: Lora, serif; font-weight: 700; font-size: 1.3rem; color: var(--text); margin-bottom: 14px; }
+.search { width: 100%; padding: 9px 12px; font: inherit; font-size: .95rem; color: var(--text);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; outline: none; }
+.search:focus { border-color: var(--accent); }
+.nav { flex: 1; overflow-y: auto; padding: 4px 10px 24px; }
+.nav h4 { margin: 18px 10px 6px; font-size: .72rem; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted); }
+.nav a { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px;
+  color: var(--text); font-size: .95rem; line-height: 1.3; }
+.nav a:hover { background: var(--accent-soft); }
+.nav a.active { background: var(--accent); color: #fff; font-weight: 500; }
+.nav a .em { font-size: 1.15rem; width: 1.4em; text-align: center; flex: none; }
+.nav .home-link { margin-bottom: 4px; }
+.nav .none { padding: 8px 10px; color: var(--muted); font-size: .9rem; }
+.side-foot { padding: 12px 20px; border-top: 1px solid var(--line); font-size: .8rem; color: var(--muted); }
+
+/* ---------- Мобильная шапка ---------- */
+.topbar { display: none; position: sticky; top: 0; z-index: 10; align-items: center; gap: 12px;
+  padding: 10px 16px; background: var(--side); border-bottom: 1px solid var(--line); }
+.topbar .logo { margin: 0; font-size: 1.1rem; }
+.burger { font: inherit; font-weight: 500; padding: 7px 12px; border-radius: 9px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--text); }
+.backdrop { display: none; }
+
+/* ---------- Основная часть ---------- */
+.main { margin-left: var(--side-w); min-height: 100vh; }
+.content { max-width: 980px; margin: 0 auto; padding: 36px 32px 64px; }
+
+.hero h1 { font-size: clamp(2rem, 5vw, 2.8rem); margin: 8px 0 8px; }
+.hero p { color: var(--muted); margin: 0 0 28px; max-width: 560px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+.card { display: flex; flex-direction: column; overflow: hidden; background: var(--surface);
+  border-radius: var(--radius); box-shadow: var(--shadow); color: var(--text); transition: transform .15s; }
+.card:hover { transform: translateY(-3px); }
+.cover { background: var(--accent-soft); display: grid; place-items: center; overflow: hidden; }
+.cover img { width: 100%; height: 100%; object-fit: cover; }
+.card .cover { aspect-ratio: 16/10; font-size: 3.6rem; }
+.card-body { padding: 14px 16px 16px; }
+.card-body h3 { margin: 0 0 6px; font-size: 1.2rem; }
+.card-body p { margin: 0 0 10px; color: var(--muted); font-size: .92rem; }
+.meta { display: flex; gap: 14px; font-size: .82rem; color: var(--muted); }
+
+.recipe-head { display: grid; grid-template-columns: 220px 1fr; gap: 28px; align-items: center; margin-bottom: 32px; }
+.recipe-head .cover { aspect-ratio: 1; border-radius: var(--radius); font-size: 6rem; }
+.kicker { font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.recipe-head h1 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); margin: 4px 0 10px; }
+.recipe-head .lead { color: var(--muted); margin: 0 0 18px; }
+.facts { display: flex; gap: 28px; flex-wrap: wrap; margin: 0; }
+.facts dt { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.facts dd { margin: 0; font-weight: 600; }
+
+.recipe-body { display: grid; grid-template-columns: 320px 1fr; gap: 36px; align-items: start; }
+.ingredients { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 18px 20px; position: sticky; top: 20px; }
+.ingredients h2, .steps h2 { margin-top: 0; font-size: 1.45rem; }
+.ingredients h3 { font-family: Inter, sans-serif; font-size: .76rem; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--accent); margin: 16px 0 4px; }
+.ingredients ul { list-style: none; padding: 0; margin: 0; }
+.ingredients li { border-bottom: 1px dashed var(--line); }
+.ingredients li:last-child { border-bottom: 0; }
+.ingredients label { display: flex; gap: 10px; padding: 7px 0; cursor: pointer; align-items: baseline; font-size: .95rem; }
+.ingredients input { accent-color: var(--accent); flex: none; }
+.ingredients input:checked + span { text-decoration: line-through; color: var(--muted); }
+
+.steps ol { list-style: none; padding: 0; margin: 0; counter-reset: s; }
+.steps li { counter-increment: s; position: relative; padding-left: 50px; margin-bottom: 22px; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 34px; height: 34px;
+  border-radius: 50%; background: var(--accent); color: #fff; font-weight: 600; display: grid; place-items: center; }
+.tip { margin-top: 26px; padding: 14px 18px; border-left: 4px solid var(--accent);
+  background: var(--accent-soft); border-radius: 0 10px 10px 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+.chip { padding: 5px 12px; border-radius: 999px; background: var(--accent-soft); font-size: .88rem; color: var(--accent); cursor: pointer; border: 0; font-family: inherit; }
+
+/* ---------- Телефон ---------- */
+@media (max-width: 860px) {
+  .topbar { display: flex; }
+  .sidebar { transform: translateX(-100%); transition: transform .2s ease; width: min(85vw, var(--side-w)); }
+  body.menu-open .sidebar { transform: none; box-shadow: 0 0 40px rgba(0,0,0,.25); }
+  body.menu-open .backdrop { display: block; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 15; }
+  .main { margin-left: 0; }
+  .content { padding: 22px 16px 48px; }
+  .recipe-head { grid-template-columns: 1fr; gap: 18px; }
+  .recipe-head .cover { aspect-ratio: 16/9; font-size: 4.5rem; }
+  .recipe-body { grid-template-columns: 1fr; gap: 26px; }
+  .ingredients { position: static; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="side-top">
+    <a class="logo" href="#">🍲 Кулинарная книга</a>
+    <input class="search" id="search" type="search" placeholder="Поиск рецепта…" autocomplete="off">
+  </div>
+  <nav class="nav" id="nav"></nav>
+  <div class="side-foot" id="count"></div>
+</aside>
+<div class="backdrop" id="backdrop"></div>
+
+<div class="main">
+  <header class="topbar">
+    <button class="burger" id="burger">☰ Рецепты</button>
+    <a class="logo" href="#">🍲 Кулинарная книга</a>
+  </header>
+  <div class="content" id="content"></div>
+</div>
+
+<script src="recipes.js"></script>
+<script>
+const R = window.RECIPES || [];
+const $ = id => document.getElementById(id);
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+const cover = r => r.image ? `<img src="${esc(r.image)}" alt="">` : esc(r.emoji || "🍽️");
+
+/* ---- меню слева ---- */
+function renderNav(filter = "") {
+  const q = filter.trim().toLowerCase();
+  const list = R.filter(r => !q || [r.title, r.description, r.category, ...(r.tags || [])].join(" ").toLowerCase().includes(q));
+  const groups = {};
+  list.forEach(r => (groups[r.category || "Разное"] ??= []).push(r));
+  const current = location.hash.slice(1);
+  let html = `<a class="home-link ${current ? "" : "active"}" href="#"><span class="em">🏠</span>Все рецепты</a>`;
+  for (const [cat, items] of Object.entries(groups)) {
+    html += `<h4>${esc(cat)}</h4>`;
+    html += items.map(r => `<a href="#${esc(r.id)}" class="${r.id === current ? "active" : ""}"><span class="em">${esc(r.emoji || "🍽️")}</span>${esc(r.title)}</a>`).join("");
+  }
+  if (!list.length) html += `<div class="none">Ничего не нашлось</div>`;
+  $("nav").innerHTML = html;
+}
+
+/* ---- главная ---- */
+function renderHome() {
+  document.title = "Кулинарная книга";
+  $("content").innerHTML = `
+    <section class="hero">
+      <h1>Кулинарная книга</h1>
+      <p>Домашние рецепты, проверенные на себе. Выберите блюдо в меню слева и отмечайте ингредиенты галочками, пока готовите.</p>
+    </section>
+    <div class="grid">
+      ${R.map(r => `
+        <a class="card" href="#${esc(r.id)}">
+          <div class="cover">${cover(r)}</div>
+          <div class="card-body">
+            <h3>${esc(r.title)}</h3>
+            <p>${esc(r.description)}</p>
+            <div class="meta">${r.time ? `<span>⏱ ${esc(r.time)}</span>` : ""}${r.servings ? `<span>🍽 ${esc(r.servings)} порц.</span>` : ""}</div>
+          </div>
+        </a>`).join("")}
+    </div>`;
+}
+
+/* ---- страница рецепта ---- */
+function renderRecipe(r) {
+  document.title = `${r.title} · Кулинарная книга`;
+  const facts = [["Время", r.time], ["Порций", r.servings], ["Сложность", r.difficulty]]
+    .filter(f => f[1]).map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
+  const ingr = (r.ingredients || []).map(g => `
+    ${g.group ? `<h3>${esc(g.group)}</h3>` : ""}
+    <ul>${g.items.map(i => `<li><label><input type="checkbox"><span>${md(i)}</span></label></li>`).join("")}</ul>`).join("");
+  $("content").innerHTML = `
+    <article>
+      <header class="recipe-head">
+        <div class="cover">${cover(r)}</div>
+        <div>
+          ${r.category ? `<div class="kicker">${esc(r.category)}</div>` : ""}
+          <h1>${esc(r.title)}</h1>
+          <p class="lead">${esc(r.description)}</p>
+          <dl class="facts">${facts}</dl>
+        </div>
+      </header>
+      <div class="recipe-body">
+        <aside class="ingredients"><h2>Ингредиенты</h2>${ingr}</aside>
+        <section class="steps">
+          <h2>Приготовление</h2>
+          <ol>${(r.steps || []).map(s => `<li>${md(s)}</li>`).join("")}</ol>
+          ${r.tip ? `<div class="tip"><strong>Совет:</strong> ${md(r.tip)}</div>` : ""}
+        </section>
+      </div>
+      ${(r.tags || []).length ? `<div class="chips">${r.tags.map(t => `<button class="chip" data-tag="${esc(t)}">#${esc(t)}</button>`).join("")}</div>` : ""}
+    </article>`;
+}
+
+/* ---- переключение ---- */
+function route() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  const r = R.find(x => x.id === id);
+  r ? renderRecipe(r) : renderHome();
+  renderNav($("search").value);
+  document.body.classList.remove("menu-open");
+  window.scrollTo(0, 0);
+}
+
+$("search").addEventListener("input", e => renderNav(e.target.value));
+$("burger").addEventListener("click", () => document.body.classList.add("menu-open"));
+$("backdrop").addEventListener("click", () => document.body.classList.remove("menu-open"));
+$("content").addEventListener("click", e => {
+  const t = e.target.closest(".chip");
+  if (!t) return;
+  $("search").value = t.dataset.tag;
+  renderNav(t.dataset.tag);
+  document.body.classList.add("menu-open");
+});
+$("count").textContent = `Рецептов: ${R.length}`;
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
