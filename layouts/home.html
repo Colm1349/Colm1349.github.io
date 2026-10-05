@@ -1,0 +1,29 @@
+{{ define "main" }}
+<section class="hero">
+  <h1>{{ site.Title }}</h1>
+  <div class="lead">{{ .Content }}</div>
+  <input id="search" class="search" type="search" placeholder="Найти рецепт: курица, острое, фасоль…" autocomplete="off">
+</section>
+
+<div class="grid" id="cards">
+  {{ range (where site.RegularPages "Section" "recipes").ByDate.Reverse }}
+    {{ partial "card.html" . }}
+  {{ end }}
+</div>
+<p class="empty" id="empty" hidden>Ничего не нашлось 🤷</p>
+
+<script>
+  const q = document.getElementById('search');
+  const cards = [...document.querySelectorAll('#cards .card')];
+  const empty = document.getElementById('empty');
+  q.addEventListener('input', () => {
+    const v = q.value.trim().toLowerCase();
+    let shown = 0;
+    cards.forEach(c => {
+      const ok = !v || c.dataset.search.includes(v);
+      c.hidden = !ok; if (ok) shown++;
+    });
+    empty.hidden = shown > 0;
+  });
+</script>
+{{ end }}

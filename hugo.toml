@@ -1,0 +1,32 @@
+# Адрес сайта. При публикации через GitHub Actions подставляется автоматически,
+# менять вручную нужно только если подключите свой домен (см. README.md).
+baseURL = "https://example.github.io/"
+locale = "ru"
+defaultContentLanguage = "ru"
+title = "Кулинарная книга"
+capitalizeListTitles = false
+
+[params]
+  description = "Домашние рецепты, проверенные на себе."
+  author = "Шеф"
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[menus]
+  [[menus.main]]
+    name = "Рецепты"
+    pageRef = "/recipes"
+    weight = 10
+  [[menus.main]]
+    name = "Категории"
+    pageRef = "/categories"
+    weight = 20
+  [[menus.main]]
+    name = "Теги"
+    pageRef = "/tags"
+    weight = 30
+
+[markup.goldmark.renderer]
+  unsafe = true

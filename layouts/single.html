@@ -1,0 +1,44 @@
+{{ define "main" }}
+<article class="recipe">
+  <header class="recipe-head">
+    <div class="recipe-cover">
+      {{ with .Params.image }}<img src="{{ . | relURL }}" alt="{{ $.Title }}">{{ else }}<span>{{ .Params.emoji | default "🍽️" }}</span>{{ end }}
+    </div>
+    <div>
+      {{ with .GetTerms "categories" }}<div class="kicker">{{ range . }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}</div>{{ end }}
+      <h1>{{ .Title }}</h1>
+      <p class="lead">{{ .Description }}</p>
+      <dl class="facts">
+        {{ with .Params.time }}<div><dt>Время</dt><dd>{{ . }}</dd></div>{{ end }}
+        {{ with .Params.servings }}<div><dt>Порций</dt><dd>{{ . }}</dd></div>{{ end }}
+        {{ with .Params.difficulty }}<div><dt>Сложность</dt><dd>{{ . }}</dd></div>{{ end }}
+      </dl>
+    </div>
+  </header>
+
+  <div class="recipe-body">
+    <aside class="ingredients">
+      <h2>Ингредиенты</h2>
+      {{ range $gi, $g := .Params.ingredients }}
+        {{ with $g.group }}<h3>{{ . }}</h3>{{ end }}
+        <ul>
+          {{ range $ii, $item := $g.items }}
+            <li><label><input type="checkbox"> <span>{{ $item | markdownify }}</span></label></li>
+          {{ end }}
+        </ul>
+      {{ end }}
+    </aside>
+
+    <section class="steps">
+      <h2>Приготовление</h2>
+      {{ .Content }}
+    </section>
+  </div>
+
+  {{ with .GetTerms "tags" }}
+  <footer class="chips">
+    {{ range . }}<a class="chip" href="{{ .RelPermalink }}">#{{ .LinkTitle }}</a>{{ end }}
+  </footer>
+  {{ end }}
+</article>
+{{ end }}
